@@ -1,4 +1,4 @@
-FROM osrf/ros:noetic-desktop-full
+FROM osrf/ros:foxy-desktop
 
 ARG USERNAME=ros
 ARG USER_UID=1000
@@ -21,11 +21,42 @@ RUN apt-get update && apt-get install -y \
   libgl1-mesa-dri \
   python3-colcon-argcomplete
 
+# Install text editors
+RUN apt-get update && apt-get install -y \
+  nano \
+  vim
+
+# Install necessary dependencies
+RUN apt-get update && apt-get install -y \
+    python3-pip \
+    python3-yaml \
+    python3-pygame \
+    python3-matplotlib \
+    python3-skimage \
+    python3-scipy
+
+# Ensure that pygame uses the correct display (for headless use)
+RUN apt-get update && apt-get install -y \
+    libx11-dev \
+    libxrender-dev \
+    libxext-dev
+
+RUN pip install --upgrade scikit-image
+RUN apt-get update && apt-get install -y \
+    python3-tk
+
 # Copy the entrypoint and bashrc scripts so we have 
 # our container's environment set up correctly
 COPY entrypoint.sh /entrypoint.sh
-COPY bashrc /home/${USERNAME}/.bashrc
+RUN echo 'source /opt/ros/noetic/setup.bash' >> /home/${USERNAME}/.bashrc
+RUN echo 'source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash' >> /home/${USERNAME}/.bashrc
+RUN echo 'source /opt/ros/noetic/setup.bash' >> /home/${USERNAME}/.bashrc
+RUN echo 'source /catkin_ws/devel/setup.bash' >> /home/${USERNAME}/.bashrc
 
 # Set up entrypoint and default command
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 CMD ["bash"]
+
+USER root
+RUN echo 'export TURTLEBOT3_MODEL=waffle_pi' >> /home/${USERNAME}/.bashrc
+USER $USERNAME
