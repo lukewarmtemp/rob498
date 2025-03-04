@@ -32,3 +32,9 @@ $ docker run -it --user ros --network=host --ipc=host \
 -v ./source:/mysource rob498_dev
 ```
 Note: you can add optional argumenents such as `roscore` to execute the command in the container, and then immediately exit.
+
+# Testing
+```
+colcon build
+ros2 run ft2 vicon_dummy_data
+```

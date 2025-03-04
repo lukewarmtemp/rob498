@@ -1,0 +1,9 @@
+repositories:
+  fl2:
+    type: git
+    url: https://github.com/lukewarmtemp/fl2.git
+    version: main
+  px4_autonomy_modules:
+    type: git
+    url: https://github.com/lukewarmtemp/px4_autonomy_modules.git
+    version: main

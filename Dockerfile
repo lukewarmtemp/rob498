@@ -33,7 +33,8 @@ RUN apt-get update && apt-get install -y \
     python3-pygame \
     python3-matplotlib \
     python3-skimage \
-    python3-scipy
+    python3-scipy \
+    python3-numpy
 
 # Ensure that pygame uses the correct display (for headless use)
 RUN apt-get update && apt-get install -y \
@@ -48,15 +49,13 @@ RUN apt-get update && apt-get install -y \
 # Copy the entrypoint and bashrc scripts so we have 
 # our container's environment set up correctly
 COPY entrypoint.sh /entrypoint.sh
-RUN echo 'source /opt/ros/noetic/setup.bash' >> /home/${USERNAME}/.bashrc
+RUN echo 'source /opt/ros/foxy/setup.bash' >> /home/${USERNAME}/.bashrc
 RUN echo 'source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash' >> /home/${USERNAME}/.bashrc
-RUN echo 'source /opt/ros/noetic/setup.bash' >> /home/${USERNAME}/.bashrc
-RUN echo 'source /catkin_ws/devel/setup.bash' >> /home/${USERNAME}/.bashrc
+RUN echo 'source /opt/ros/foxy/setup.bash' >> /home/${USERNAME}/.bashrc
+RUN echo 'source /catkin_ws/install/local_setup.bash' >> /home/${USERNAME}/.bashrc
 
 # Set up entrypoint and default command
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 CMD ["bash"]
 
-USER root
-RUN echo 'export TURTLEBOT3_MODEL=waffle_pi' >> /home/${USERNAME}/.bashrc
 USER $USERNAME
